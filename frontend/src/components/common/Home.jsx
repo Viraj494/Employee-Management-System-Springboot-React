@@ -42,36 +42,41 @@ function Home() {
 
 
 
-  const deleteEmployee = (id) => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will not be able to recover this employee!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'No, cancel!',
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        axios.delete(`http://localhost:8000/user/employee/${id}`)
-          .then(response => {
-            setEmployees(employees.filter(employee => employee.id !== id));
-            Swal.fire(
-              'Deleted!',
-              'Employee deleted successfully!',
-              'success'
-            );
-          })
-          .catch(error => {
-            Swal.fire(
-              'Error!',
-              'There was an error deleting the employee!',
-              'error'
-            );
-          });
-      }
-    });
-  };
+const deleteEmployee = (id) => {
+  const token = localStorage.getItem('token');
+
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'You will not be able to recover this employee!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'No, cancel!',
+    reverseButtons: true
+  }).then((result) => {
+    if (result.isConfirmed) {
+      axios.delete(`http://localhost:8000/user/employee/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(response => {
+        setEmployees(employees.filter(employee => employee.id !== id));
+        Swal.fire(
+          'Deleted!',
+          'Employee deleted successfully!',
+          'success'
+        );
+      })
+      .catch(error => {
+        Swal.fire(
+          'Error!',
+          'There was an error deleting the employee!',
+          'error'
+        );
+      });
+    }
+  });
+};
+
   
 
   const navigate = useNavigate();

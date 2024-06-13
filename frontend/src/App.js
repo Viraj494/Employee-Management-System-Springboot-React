@@ -10,7 +10,9 @@ import UserService from './components/service/UserService';
 import UpdateUser from './components/userspage/UpdateUser.jsx';
 import UserManagementPage from './components/userspage/UserManagementPage';
 import ProfilePage from './components/userspage/ProfilePage';
-import Home from './components/common/Home.jsx'
+import Home from './components/common/Home.jsx';
+import AddEmployee from "./components/common/AddEmployee.jsx";
+import EditEmployee from "./components/common/EditEmployee.jsx";
 import './App.css'; // Make sure to import your CSS
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
             <Route exact path="/login" element={<LoginPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/home" element={<Home />}></Route>
+            <Route path="/addEmployee" element={<AddEmployee />}></Route>
+            <Route path="/editEmployee/:id" element={<EditEmployee />}></Route>
 
 
             {/* Check if user is authenticated and admin before rendering admin-only routes */}

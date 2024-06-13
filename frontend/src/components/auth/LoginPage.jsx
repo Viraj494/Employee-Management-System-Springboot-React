@@ -11,14 +11,20 @@ function LoginPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         try {
             const userData = await UserService.login(email, password);
             console.log(userData);
             if (userData.token) {
                 localStorage.setItem('token', userData.token);
                 localStorage.setItem('role', userData.role);
-                navigate('/home');
+                if (userData.role === 'ADMIN') {
+                    navigate('/admin/user-management');
+                } else if (userData.role === 'USER') {
+                    navigate('/home');
+                } else {
+                    setError('Unknown role');
+                }
             } else {
                 setError(userData.message);
             }
@@ -30,6 +36,7 @@ function LoginPage() {
             }, 5000);
         }
     };
+    
 
     return (
         <div className="container mt-5">
