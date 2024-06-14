@@ -115,7 +115,7 @@ const deleteEmployee = (id) => {
   return (
     <div className='container-fluid p-2'>
 
-      <button onClick={() => navigate('/addEmployee')} className='btn btn-warning btn-sm'>+ Add New Employee</button>
+      <button onClick={() => navigate('/addEmployee')} className='btn btn-secondary btn-sm'>+ Add New Employee</button>
       <div className="input-group mt-2 mb-2" style={{width:'320px'}}>
         <input 
           type="text" 
@@ -148,19 +148,19 @@ const deleteEmployee = (id) => {
               <td>{employee.designation}</td>
               <td style={{ display: 'flex' }}>
                 <button
-                  className='btn btn-secondary mr-2'
+                  className='btn btn-secondary mr-2 rounded-0'
                   onClick={() => handleEdit(employee.id)}
                 >
                   <FaEdit />
                 </button>
                 <button
-                  className='btn btn-secondary mr-2'
+                  className='btn btn-secondary mr-2 rounded-0'
                   onClick={() => deleteEmployee(employee.id)}
                 >
                   <MdDelete />
                 </button>
                 <button
-                  className='btn btn-secondary'
+                  className='btn btn-secondary rounded-0'
                   onClick={() => handleView(employee)}
                 >
                   <FaEye />

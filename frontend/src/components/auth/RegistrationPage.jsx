@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import UserService from '../service/UserService';
 import { useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure this is imported
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function RegistrationPage() {
     const navigate = useNavigate();
@@ -21,8 +21,14 @@ function RegistrationPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const token = localStorage.getItem('token'); // Retrieve token from storage
+        if (!token) {
+            alert('You are not authenticated. Please log in first.');
+            return;
+        }
+
         try {
-            await UserService.register(formData);
+            await UserService.register(formData, token); // Pass the token to the register function
             setFormData({
                 name: '',
                 email: '',
@@ -34,7 +40,7 @@ function RegistrationPage() {
             navigate('/admin/user-management');
         } catch (error) {
             console.error('Error registering user:', error);
-            alert('An error occurred while registering user');
+            alert('An error occurred while registering the user');
         }
     };
 

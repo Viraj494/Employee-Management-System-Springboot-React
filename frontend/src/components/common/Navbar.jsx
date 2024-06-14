@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import UserService from '../service/UserService';
 import { FaUserCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import logo from "../../images/slt.png"
 
 function Navbar() {
     const isAuthenticated = UserService.isAuthenticated();
@@ -20,7 +21,8 @@ function Navbar() {
     return (
         <nav className="navbar bg-primary" data-bs-theme="dark">
             <div className="container-fluid">
-                <Link to="/home" className="navbar-brand">Employee Management System</Link>
+            <img src={logo} alt="Logo" style={{ height: '40px' }} /> {/* Set the logo here */}
+            <Link to="/home" className="navbar-brand">Mobitel - Employee Management System</Link>
                 <div className='nav-item'>
                     {isAdmin && <Link to="/admin/user-management">User Management</Link>}
                 </div>
