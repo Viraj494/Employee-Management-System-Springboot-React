@@ -27,7 +27,7 @@ function ProfilePage() {
                     <p className="card-text"><strong>Name:</strong> {profileInfo.name}</p>
                     <p className="card-text"><strong>Email:</strong> {profileInfo.email}</p>
                     <p className="card-text"><strong>Role:</strong> {profileInfo.role}</p>
-                    <p className="card-text"><strong>City:</strong> {profileInfo.city}</p>
+                    <p className="card-text"><strong>Division:</strong> {profileInfo.division}</p>
                     {profileInfo.role === "ADMIN" && (
                         <Link to={`/update-user/${profileInfo.id}`} className="btn btn-primary">
                             Update This Profile

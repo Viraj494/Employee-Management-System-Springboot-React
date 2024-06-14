@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function EditEmployee() {
     const { id } = useParams();
+    const navigate = useNavigate();
+
     const [employee, setEmployee] = useState({
         name: '',
         NIC: '',
@@ -50,10 +53,28 @@ function EditEmployee() {
           await axios.put(`http://localhost:8000/user/employee/${id}`, employee, {
             headers: { Authorization: `Bearer ${token}` }
           });
-          alert('Employee details updated successfully!');
+          Swal.fire({
+            title: 'Employee has been updated!',
+            icon: 'success',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer);
+              toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+          });
+          navigate("/home")
+
         } catch (error) {
           console.error('Error updating employee:', error);
-          alert('Failed to update employee details. Please try again.');
+          Swal.fire(
+            'Error!',
+            'There was an error updating the user.',
+            'error'
+          );        
         }
       };
       

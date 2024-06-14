@@ -15,7 +15,7 @@ class UserService{
 
     static async register(userData, token){
         try{
-            const response = await axios.post(`${UserService.BASE_URL}/auth/register`, userData, 
+            const response = await axios.post(`${UserService.BASE_URL}/admin/register`, userData, 
             {
                 headers: {Authorization: `Bearer ${token}`}
             })

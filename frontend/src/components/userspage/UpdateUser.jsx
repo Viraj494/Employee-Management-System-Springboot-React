@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import UserService from '../service/UserService';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure this is imported
+import Swal from 'sweetalert2';
+
 
 function UpdateUser() {
   const navigate = useNavigate();
@@ -11,7 +13,7 @@ function UpdateUser() {
     name: '',
     email: '',
     role: '',
-    city: ''
+    division: ''
   });
 
   useEffect(() => {
@@ -22,8 +24,8 @@ function UpdateUser() {
     try {
       const token = localStorage.getItem('token');
       const response = await UserService.getUserById(userId, token); // Pass userId to getUserById
-      const { name, email, role, city } = response.ourUsers;
-      setUserData({ name, email, role, city });
+      const { name, email, role, division } = response.ourUsers;
+      setUserData({ name, email, role, division });
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -40,19 +42,47 @@ function UpdateUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const confirmUpdate = window.confirm('Are you sure you want to update this user?');
-      if (confirmUpdate) {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, update it!',
+        cancelButtonText: 'No, cancel!',
+        reverseButtons: true
+      });
+  
+      if (result.isConfirmed) {
         const token = localStorage.getItem('token');
         const res = await UserService.updateUser(userId, userData, token);
         console.log(res);
-        // Redirect to user management page or display a success message
+        
+        Swal.fire({
+          title: 'User has been updated!',
+          icon: 'success',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          }
+        });
+  
         navigate("/admin/user-management");
       }
     } catch (error) {
       console.error('Error updating user profile:', error);
-      alert(error);
+      Swal.fire(
+        'Error!',
+        'There was an error updating the user profile.',
+        'error'
+      );
     }
   };
+  
 
   return (
     <div className="container mt-5">
@@ -97,13 +127,13 @@ function UpdateUser() {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="city">City:</label>
+              <label htmlFor="city">Division:</label>
               <input
                 type="text"
                 className="form-control"
-                id="city"
-                name="city"
-                value={userData.city}
+                id="division"
+                name="division"
+                value={userData.division}
                 onChange={handleInputChange}
                 required
               />

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Swal from 'sweetalert2';
 import UserService from '../service/UserService';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -11,7 +12,7 @@ function RegistrationPage() {
         email: '',
         password: '',
         role: '',
-        city: ''
+        division: ''
     });
 
     const handleInputChange = (e) => {
@@ -23,7 +24,11 @@ function RegistrationPage() {
         e.preventDefault();
         const token = localStorage.getItem('token'); // Retrieve token from storage
         if (!token) {
-            alert('You are not authenticated. Please log in first.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Authentication Error',
+                text: 'You are not authenticated. Please log in first.',
+            });
             return;
         }
 
@@ -34,13 +39,32 @@ function RegistrationPage() {
                 email: '',
                 password: '',
                 role: '',
-                city: ''
+                division: ''
             });
-            alert('User registered successfully');
+
+            // Show success notification using SweetAlert2
+            Swal.fire({
+                icon: 'success',
+                title: 'User has been registered successfully!',
+                timer: 3000, // Display toast for 3 seconds
+                timerProgressBar: true,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
+
             navigate('/admin/user-management');
         } catch (error) {
             console.error('Error registering user:', error);
-            alert('An error occurred while registering the user');
+            Swal.fire({
+                icon: 'error',
+                title: 'Registration Error',
+                text: 'An error occurred while registering the user',
+            });
         }
     };
 
@@ -65,8 +89,8 @@ function RegistrationPage() {
                     <input type="text" className="form-control" id="role" name="role" value={formData.role} onChange={handleInputChange} placeholder="Enter your role" required />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="city" className="form-label">City:</label>
-                    <input type="text" className="form-control" id="city" name="city" value={formData.city} onChange={handleInputChange} placeholder="Enter your city" required />
+                    <label htmlFor="division" className="form-label">Division:</label>
+                    <input type="text" className="form-control" id="division" name="division" value={formData.division} onChange={handleInputChange} placeholder="Enter your division" required />
                 </div>
                 <button type="submit" className="btn btn-primary">Register</button>
             </form>

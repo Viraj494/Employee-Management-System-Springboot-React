@@ -60,11 +60,19 @@ const deleteEmployee = (id) => {
       })
       .then(response => {
         setEmployees(employees.filter(employee => employee.id !== id));
-        Swal.fire(
-          'Deleted!',
-          'Employee deleted successfully!',
-          'success'
-        );
+        Swal.fire({
+          title: 'Employee has been deleted!',
+          icon: 'success',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          }
+        });
       })
       .catch(error => {
         Swal.fire(
@@ -108,8 +116,16 @@ const deleteEmployee = (id) => {
     );
   });
 
-  if (loading) return <div className="spinner-border" role="status"><span className="visually-hidden">Loading...</span></div>;
-  
+  if (loading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
+        <div className="spinner-border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+    
   if (error) return <div>{error}</div>;
 
   return (
@@ -148,19 +164,19 @@ const deleteEmployee = (id) => {
               <td>{employee.designation}</td>
               <td style={{ display: 'flex' }}>
                 <button
-                  className='btn btn-secondary mr-2 rounded-0'
+                  className='btn btn-warning mr-2 rounded-0'
                   onClick={() => handleEdit(employee.id)}
                 >
                   <FaEdit />
                 </button>
                 <button
-                  className='btn btn-secondary mr-2 rounded-0'
+                  className='btn btn-warning mr-2 rounded-0'
                   onClick={() => deleteEmployee(employee.id)}
                 >
                   <MdDelete />
                 </button>
                 <button
-                  className='btn btn-secondary rounded-0'
+                  className='btn btn-warning rounded-0'
                   onClick={() => handleView(employee)}
                 >
                   <FaEye />

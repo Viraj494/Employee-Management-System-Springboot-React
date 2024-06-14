@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import Swal from 'sweetalert2';
 
 function AddEmployee() {
   const [employee, setEmployee] = useState({
@@ -36,14 +37,30 @@ function AddEmployee() {
     })
       .then(response => {
         if (response.data.length > 0) {
-          alert('Employee ID already exists! Please choose a different one.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Employee ID already exists!',
+            text: 'Please choose a different one.'
+          });
         } else {
           // If the ID doesn't exist, proceed with adding the employee
           axios.post('http://localhost:8000/user/employee', employee, {
             headers: { Authorization: `Bearer ${token}` }
           })
             .then(response => {
-              alert('Employee added successfully!');
+              Swal.fire({
+                title: 'The employee added succesfully!',
+                icon: 'success',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.addEventListener('mouseenter', Swal.stopTimer);
+                  toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+              });
               // Clear the form
               setEmployee({
                 eid: '',
@@ -61,12 +78,20 @@ function AddEmployee() {
               });
             })
             .catch(error => {
-              alert('There was an error adding the employee!');
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'There was an error adding the employee.'
+              });
             });
         }
       })
       .catch(error => {
-        alert('There was an error checking the employee ID!');
+        Swal.fire({
+          icon: 'error',
+          title: 'Error!',
+          text: 'The employee ID is already Exist!'
+        });
       });
   };
 

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import UserService from '../service/UserService';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure this is imported
+import Swal from 'sweetalert2';
+
 
 function UserManagementPage() {
   const [users, setUsers] = useState([]);
@@ -24,15 +26,46 @@ function UserManagementPage() {
   const deleteUser = async (userId) => {
     try {
       // Prompt for confirmation before deleting the user
-      const confirmDelete = window.confirm('Are you sure you want to delete this user?');
-      const token = localStorage.getItem('token'); // Retrieve the token from localStorage
-      if (confirmDelete) {
+      const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel'
+      });
+  
+      if (result.isConfirmed) {
+        const token = localStorage.getItem('token'); // Retrieve the token from localStorage
         await UserService.deleteUser(userId, token);
-        // After deleting the user, fetch the updated list of users
-        fetchUsers();
+  
+        // Show success notification using SweetAlert2 with Bootstrap styling
+        Swal.fire({
+          title: 'User has been deleted!',
+          icon: 'success',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          }
+        });
+  
+        // Update the users state to reflect the deletion
+        setUsers(users.filter(user => user.id !== userId));
       }
     } catch (error) {
       console.error('Error deleting user:', error);
+      Swal.fire(
+        'Error!',
+        'There was an error deleting the user.',
+        'error'
+      );
     }
   };
 
@@ -49,8 +82,8 @@ function UserManagementPage() {
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
+            <th>Division</th>
             <th>Actions</th>
-
           </tr>
         </thead>
         <tbody>
@@ -60,7 +93,7 @@ function UserManagementPage() {
               <td>{user.name}</td>
               <td>{user.email}</td>
               <td>{user.role}</td>
-
+              <td>{user.division}</td>
               <td>
                 <button 
                   className="btn btn-danger btn-sm me-2" 
